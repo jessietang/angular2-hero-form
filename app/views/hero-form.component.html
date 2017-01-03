@@ -1,0 +1,70 @@
+<div class="container">
+  <div [hidden]="submitted">
+    <h1>Hero Form</h1>
+    <form action="" (ngSubmit)="onSubmit()" #heroForm="ngForm">
+      {{diagnostic}}
+      <div class="form-group">
+        <label for="name">name</label>
+        <input type="text" class="form-control" id="name" required
+               [(ngModel)]="heroModel.name" name="name" #spy="ngModel"/>
+        <!--模板引用变量可以访问模板中输入框的 Angular 控件。
+        这里，创建了名叫spy的变量，并且赋值为 "ngModel"。
+        为什么是 “ngModel”？ 指令的 exportAs 属性告诉 Angular 如何链接模板引用变量到指令。
+        这里把spy设置为ngModel是因为ngModel指令的exportAs属性设置成了 “ngModel”。-->
+        <div [hidden]="spy.valid || spy.pristine" class="alert alert-danger">
+          Name is required.
+        </div>
+        <!--todo:用这个 spy 来显示它上面的所有 CSS 类---#spy{{spy.className}}-->
+        <!--todo:用这个 spy 来显示它上面的所有 CSS 类---form-control ng-untouched ng-pristine ng-valid-->
+        <!-- 当在表单中使用[(ngModel)]时，必须要定义name属性-->
+      </div>
+
+      <div class="form-group">
+        <label for="alterEgo">Alter Ego</label>
+        <input type="text" class="form-control" id="alterEgo"
+               [(ngModel)]="heroModel.alterEgo" name="alterEgo"/>
+      </div>
+
+      <div class="form-group">
+        <label for="power">power</label>
+        <select id="power" class="form-control" required [(ngModel)]="heroModel.power" name="power">
+          <option *ngFor="let power of powers" [value]="power">{{power}}</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-default" [disabled]="!heroForm.form.valid">submit</button>
+      <button type="button" class="btn btn-default" (click)="newHero();heroForm.reset();">new hero</button>
+      <!--再次运行应用，点击 New Hero 按钮，表单被清空了。 输入框左侧的必填项竖条是红色的，
+      表示name和power属性是无效的。 这可以理解，因为有一些必填字段。 错误信息是隐藏的，因为
+      表单还是全新的，还没有修改任何东西。
+
+      输入名字，再次点击 New Hero 按钮。 这次，出现了错误信息！为什么？我们不希望显示新（空）
+      的英雄时，出现错误信息。
+
+      使用浏览器工具审查这个元素就会发现，这个 name 输入框并不是全新的。 表单记得我们在点击
+      New Hero 前输入的名字。 更换了英雄并不会重置控件的“全新”状态。
+
+      我们必须清除所有标记，在调用newHero()方法后调用表单的reset()方法即可。-->
+    </form>
+  </div>
+
+  <div [hidden]="!submitted">
+    <h2>you submitted the following:</h2>
+    <div class="row">
+      <div class="col-md-3">name:</div>
+      <div class="col-md-9 pull-left">{{heroModel.name}}</div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3">Alter Ego:</div>
+      <div class="col-md-9 pull-left">{{heroModel.alterEgo}}</div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3">power:</div>
+      <div class="col-md-9 pull-left">{{heroModel.power}}</div>
+    </div>
+
+    <button class="btn btn-default" (click)="submitted=false">Edit</button>
+  </div>
+</div>
