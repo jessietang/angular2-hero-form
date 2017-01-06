@@ -1,0 +1,250 @@
+<p style="margin-top: 50px;font-size: 30px;">下面演示angular2的模板语法:</p>
+
+<p class="title">一、HTML</p>
+<p class="list">几乎所有的 HTML 语法都是有效的模板语法。但值得注意的例外是script元素，
+  它被禁用了，以阻止脚本注入攻击的风险。（实际上，script只是被忽略了。）</p>
+
+
+
+<p class="title">二、插值表达式</p>
+<h3>{{title}}</h3>
+<div>插值表达式：<img src="{{imgUrl}}" alt=""/></div>
+<div>模板表达式：<img [src]="imgUrl" alt=""/></div>
+
+
+<p class="title">三、模板绑定</p>
+<p class="list">1.这句话很重要：模板绑定是通过 property 和事件来工作的，而不是 attribute。</p>
+<p>attribute 初始化 DOM property，然后它们的任务就完成了。
+  property 的值可以改变；attribute 的值不能改变。</p>
+<p>disabled attribute 是另一个古怪的例子。按钮的disabled property 是false，
+  因为默认情况下按钮是可用的。 当我们添加disabled attribute 时，只要它出现了
+  按钮的disabled property 就初始化为true，于是按钮就被禁用了。
+  添加或删除disabled attribute会禁用或启用这个按钮。但 attribute 的值无关紧要，
+  这就是我们为什么没法通过 <button disabled="false">仍被禁用</button>这种写法来启用按钮。</p>
+<button disabled="false">仍被禁用</button>
+
+
+<p class="list">2.属性绑定---最常用的属性绑定是把元素属性设置为组件属性的值</p>
+<p>下面这个例子中， image 元素的 src属性会被绑定到组件的 imageUrl 属性上:</p>
+<p>包裹在方括号中的元素属性名标记着【目标属性】。下列代码中的【目标属性是 image 元素的src属性】</p>
+<img [src]="imgUrl" alt=""/>
+<p>另一个例子是当组件说它isUnchanged（未改变）时禁用按钮:</p>
+<button [disabled]="isUnchanged">cancel is disabled</button>
+<button [disabled]="unChanged">cancel is not disabled</button>
+<button disabled="true">cancel is disabled</button>
+<button disabled="false">cancel is disabled</button>
+<p>另一个例子是设置指令的属性:【注意ngClass的用法】</p>
+<div [ngClass]="setClasses()">[ngClass] binding to the classes property</div>
+<p>还有另一个例子是设置自定义组件的模型属性（这是父子组件之间通讯的重要途径）：</p>
+<!--<hero-detail [hero]="currentHero"></hero-detail>-->
+
+
+<p class="list">3.属性绑定还是插值表达式？？？</p>
+<p><img src="{{imgUrl}}"> is the <i>interpolated</i> image.</p>
+<p><img [src]="imgUrl"> is the <i>property bound</i> image.</p>
+
+<p><span>"{{title}}" is the <i>interpolated</i> title.</span></p>
+<p>"<span [innerHTML]="title"></span>" is the <i>property bound</i> title.</p>
+<p class="list">在多数情况下，插值表达式是更方便的备选项。
+  实际上，在渲染视图之前，Angular 把这些插值表达式翻译成相应的属性绑定。</p>
+
+<p class="title">四、attribute、class 和 style 绑定</p>
+<p class="list">1.attribute绑定</p>
+<p>通篇都在说通过属性绑定来设置元素的属性总是好于用字符串设置 attribute。
+  为什么 Angular 还提供了 attribute 绑定呢？
+  <strong>因为当元素没有属性可绑的时候，就必须使用 attribute 绑定。</strong></p>
+<p>考虑 ARIA， SVG 和 table 中的 colspan/rowspan 等 attribute。
+  它们是纯粹的 attribute，没有对应的属性可供绑定。</p>
+<table border="1" width="300px">
+  <tr>
+    <td [attr.colspan]="1+1">one-two</td>
+  </tr>
+  <tr>
+    <td>1111</td>
+    <td>2222</td>
+  </tr>
+</table>
+<p>attribute 绑定的主要用例之一是设置 ARIA attribute（译注：ARIA指可访问性，
+  用于给残障人士访问互联网提供便利）， 就像这个例子中一样：</p>
+<button [attr.aria-label]="actionName">{{actionName}} with Aria</button>
+
+
+<p class="list">2.css类绑定</p>
+<p>CSS 类绑定绑定的语法与属性绑定类似。 但方括号中的部分不是元素的属性名，
+  而是由class前缀，一个点 (.)和 CSS 类的名字组成， 其中后两部分是可选的。
+  形如：[class.class-name]。</p>
+<p>不用绑定直接设置attribute时是这样的：</p>
+<div class="bad curly special">bad curly special</div>
+<p>可以把它改写为绑定到所需 CSS 类名的绑定；这是一个或者全有或者全无的替换型绑定。
+  （译注：即【当 badCurly 有值时 class 这个 attribute 设置的内容会被完全覆盖】）</p>
+<div class="bad curly special" [class]="badCurly">badCurly</div>
+<p>最后，可以绑定到特定的类名。 当模板表达式的求值结果是真值时，Angular 会添加这个类，反之则移除它</p>
+<div [class.special]="isSpecial">The class binding is special</div>
+<div class="special" [class.special]="!isSpecial">this one is not so special</div>
+<p style="color:red;font-weight: 600;">
+  CSS 类绑定 是添加或删除单个类的最佳途径。当想要同时添加或移除多个 CSS 类时，
+  NgClass指令可能是更好的选择。
+</p>
+<p>绑定到一个 key:value 形式的控制对象，是应用NgClass的好方式。
+  这个对象中的每个 key 都是一个 CSS 类名，如果它的 value 是true，
+  这个类就会被加上，否则就会被移除。</p>
+
+
+<p class="list">3.样式绑定</p>
+<p>样式属性命名方法可以用中线命名法，像上面的一样 也可以用驼峰式命名法，如fontSize。</p>
+<button [style.color]="isSpecial ? 'red' : 'green'">red</button>
+<button [style.background-color]="canSave ? 'green' : 'red'">canSave green</button>
+
+<button [style.font-size.em]="isSpecial ? 3 : 1" >Big</button>
+<button [style.font-size.%]="!isSpecial ? 150 : 50" >Small</button>
+
+
+<p class="title">五、事件绑定---事件流：从元素到组件。</p>
+<button (click)="onSave()">save</button>
+
+
+<p class="title">六、双向数据绑定---使用 NgModel 进行双向数据绑定</p>
+<p class="list">双向数据绑定语法：[(x)]。
+  [(x)]语法结合了属性绑定的方括号[x]和事件绑定的圆括号(x)</p>
+<p class="list">在使用ngModel做双向数据绑定之前，得先导入FormsModule，
+  把它加入 Angular 模块的imports列表。</p>
+
+
+
+<p class="title">七、内置指令</p>
+<p class="list">1.ngClass</p>
+<p>CSS 类绑定 是添加或删除单个类的最佳途径:</p>
+<div [class.special]="isSpecial">The class binding is special</div>
+<p>当想要同时添加或移除多个 CSS 类时，NgClass指令可能是更好的选择。</p>
+<div [ngClass]="setClasses()">ngClass的用法</div>
+
+<p class="list">2.ngStyle</p>
+<p>样式绑定是设置单一样式值的简单方式:</p>
+<div [style.font-size]="isSpecial ? '50px': '14px'">the div is large</div>
+<p>如果要同时设置多个内联样式，NgStyle指令可能是更好的选择。</p>
+<div [ngStyle]="setStyles()">This div is italic, normal weight, and extra large (24px).</div>
+
+<p class="list">3.ngIf</p>
+<div *ngIf="currentHero">{{currentHero.name}}</div>
+
+<p class="list">4.可见性和NgIf不是一回事</p>
+<p>我们可以通过类绑定或样式绑定来显示和隐藏元素子树（元素及其子元素）。
+  当隐藏子树时，它仍然留在 DOM 中。 子树中的组件及其状态仍然保留着。
+  即使对于不可见属性，Angular 也会继续检查变更。 子树可能占用相当可观的内存和运算资源。</p>
+<p>当NgIf为false时，Angular 从 DOM 中物理地移除了这个元素子树。
+  它销毁了子树中的组件及其状态，也潜在释放了可观的资源，最终让用户体验到更好的性能。</p>
+
+
+
+<p class="list">5.ngSwitch</p>
+<p>
+  这里有三个相互合作的指令：
+
+  ngSwitch：绑定到返回开关值的表达式
+
+  ngSwitchCase：绑定到返回匹配值的表达式
+
+  ngSwitchDefault：用于标记出默认元素的 attribute
+</p>
+<p>不要在ngSwitch的前面加星号 (*)，而应该用属性绑定。
+  要把星号 (*) 放在ngSwitchCase和ngSwitchDefault的前面</p>
+<span [ngSwitch]="toeChoice">
+  <span *ngSwitchCase="'Eenie'">Eenie</span>
+  <span *ngSwitchCase="'Meanie'">Meanie</span>
+  <span *ngSwitchCase="'Miney'">Miney</span>
+  <span *ngSwitchCase="'Moe'">Moe</span>
+  <span *ngSwitchDefault>other</span>
+</span>
+
+
+<p class="list">6.ngFor</p>
+<ul>
+  <li *ngFor="let user of users;let i=index;">
+    序号：{{i+1}}----name:{{user.name}};age:{{user.age}}
+  </li>
+</ul>
+
+
+<p class="title">八、模板引用变量</p>
+<p class="list">1.定义模板引用变量并且获取值</p>
+<input type="text" placeholder="phone number" #phone/>
+<button (click)="callPhone(phone.value)">Call</button>
+<p>用ref-name定义name变量</p>
+<input type="text" placeholder="name" ref-name/>
+<button (click)="callPerson(name.value)">call</button>
+<p>有些人不喜欢使用#字符，而是使用它的规范形式：ref-前缀。
+  例如，既能用#phone，也能用ref-phone来定义phone变量。</p>
+<p class="list">2.NgForm 和模板引用变量</p>
+<div *ngIf="!submitted">
+  <form action="" (ngSubmit)="onSubmit()" #theForm="ngForm">
+    <label for="name">name</label>
+    <input type="text" name="name" id="name" required
+           [(ngModel)]="currentHero.name"/>
+    <button type="submit" [disabled]="!theForm.form.valid">submit</button>
+  </form>
+</div>
+<div *ngIf="submitted">
+  you have submitted it.
+  <button (click)="submitted=false">edit</button>
+</div>
+
+
+<p class="title">九、输入和输出属性</p>
+<!--
+  @Input()  hero: Hero;  ---输入
+  @Output() deleteRequest = new EventEmitter<Hero>();  ---输出
+
+  另外，还可以在指令元数据的inputs或outputs数组中标记出这些成员。比如这个例子：
+  @Component({
+    inputs: ['hero'],
+    outputs: ['deleteRequest'],
+  })
+
+  既可以通过装饰器，也可以通过元数据数组来指定输入/输出属性。但别同时用！
+-->
+<p class="list">输入还是输出？---输入属性通常接收数据值。
+  输出属性暴露事件生产者，如EventEmitter对象。
+  输入和输出这两个词是从目标指令的角度来说的。</p>
+<!--
+<hero-detail [hero]="currentHero" (deleteRequest)="deleteHero($event)">
+  从HeroDetailComponent角度来看，HeroDetailComponent.hero是个输入属性，
+  因为数据流从模板绑定表达式流入那个属性。
+
+从HeroDetailComponent角度来看，HeroDetailComponent.deleteRequest是个输出属性，
+因为事件从那个属性流出，流向模板绑定语句中的处理器。
+-->
+
+
+
+<p class="title">十、模板表达式操作符</p>
+<p class="list">1.管道操作符</p>
+<div>
+  title through a pipe chain:
+  {{title | uppercase | lowercase}}
+</div>
+<p>json管道对调试绑定特别有用：</p>
+<div>{{users | json}}</div>
+<p class="list">2.安全导航操作符 ( ?. ) 和空属性路径---在像a?.b?.c?.d这样的长属性路径中，它工作得很完美。</p>
+<p>Angular 的安全导航操作符 (?.) 是一种流畅而便利的方式，用来保护出现在属
+  性路径中 null 和 undefined 值。 下例中，当heroes为空时，保护视图渲染器，让它免于失败。</p>
+<!--The current hero's name is {{heroes.firstName}} 这样，如果heroes是空对象的话，会报错-->
+<div>The current hero's name is {{heroes?.firstName}}</div>
+<p>可以通过写NgIf代码来解决这个问题:</p>
+<div *ngIf="heroes">
+  the hero's name is {{heroes.firstName}}
+</div>
+
+
+<p class="title">十一、自定义指令</p>
+<p class="list">1.myUnless指令</p>
+<p *myUnless="condition">
+  condition is false and myUnless is true.
+</p>
+<p *myUnless="!condition">
+  condition is true and myUnless is false.
+</p>
+
+<p class="list">2.highlight指令</p>
+<p highlight>i am highlight</p>
+
+

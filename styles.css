@@ -3,3 +3,42 @@ h1 {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 250%;
 }
+
+.title {
+  font-size: 20px;
+  color: green;
+  margin-top:20px;
+}
+
+.list {
+  font-size: 16px;
+  color: darkred;
+}
+
+.bad {
+  font-size:30px;
+}
+
+.curly {
+  color: chartreuse;
+}
+
+.special {
+  background-color: #0077b3;
+}
+
+.badCurly {
+  color: purple;
+  background-color: #666666;
+}
+
+.saveable {
+  color: orange;
+}
+
+.modified {
+  font-size: 30px;
+}
+
+
+

@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'my-app',
-  template: `<hero-form></hero-form>`,
+  template: `
+  <hero-form></hero-form>
+  <grammar-test></grammar-test>
+`,
 })
-export class AppComponent  { name = 'Angular'; }
+export class AppComponent  {
+}
